@@ -1,0 +1,75 @@
+\documentclass[12pt]{standalone}
+
+\input{./preamb.tex}
+
+% Variable
+\newcommand{\txtsiza}{\footnotesize}
+
+%%%%% ~~~~~ %%%%%
+\begin{document}
+%%%%% ~~~~~ %%%%%
+
+
+% Define block styles
+\tikzstyle{block} = 
+[rectangle, 
+draw, 
+fill=blue!10,  
+text centered, 
+rounded corners,
+]
+\tikzstyle{line} = 
+[draw, 
+-latex'
+]
+\tikzstyle{cloud} = 
+[draw, 
+ellipse,
+fill=black!10,
+]
+\tikzstyle{pic} = 
+[rectangle,
+inner sep=5pt
+]
+
+
+
+
+% ---------- ---------- ----------
+%
+%\vspace*{-1.5em}
+%\hspace*{-0.25em}
+\begin{tikzpicture}[node distance = 0cm, auto]    
+    % Place nodes
+    \node [cloud, align=center] (wgbs) {{\txtsiza WGBS}\\ {\txtsiza data}};
+    \node [pic, right of=wgbs, node distance = 3.5cm] (sra) {\faFile ~{\txtsiza .fastq}};
+    \node [pic, right of=sra, node distance = 3.5cm] (align) {\faFile ~{\txtsiza .bam}};
+    \node [pic, right of=align, node distance = 3.0cm] (cov) {\faFile ~{\txtsiza .cov}};    
+    \node [pic, below of=sra, node distance = 1.5cm] (ref) {\faFile ~{\txtsiza .fa}};
+    \node [pic, below of=ref, node distance = 1.5cm] (annot) {\faFile ~{\txtsiza .gff}};  
+    \node [cloud, align=center, left of=annot, node distance = 3.5cm] (Ensembl) {{\txtsiza Reference}\\ {\txtsiza genome}};    
+    \node [block, align=center, right of=ref, node distance = 3.0cm] (cgi) {{\txtsiza CGI}\\ {\txtsiza calling}};    
+    \node [block, align=center, below of=cov, node distance = 1.5cm] (cgicov) {{\txtsiza Methylation}\\ {\txtsiza at CGIs}};    
+    \node [block, align=center, below of=cgicov, node distance = 1.5cm] (cgicovgff) {{\txtsiza Assign}\\ {\txtsiza CGIs to genes}};    
+    \node [block, align=center, right of=cgicovgff, node distance = 3.25cm] (cand) {\txtsiza {Candidate}\\ {\txtsiza DMR genes}};       
+    % Draw edges
+    \path [line] (wgbs) -- node[align=center, text width=3cm, text=black!80, anchor=south] {{\txtsiza Sequence}\\ {\txtsiza Read}\\ {\txtsiza Archive}} (sra);
+    \path [line] (sra) -- node[align=center, text width=3cm, text=black!80, anchor=south] {{\txtsiza -SRA toolkit} \\ {\txtsiza -TrimGalore!}} (align);
+    \path [line] (align) -- node[align=left, text width=2.5cm, text=black!80, anchor=south] {~~~{\txtsiza Bismark:} \\~~~{\txtsiza -Deduplicate} \\~~~{\txtsiza -Methylation}\\~~~~{\txtsiza extractor}} (cov);    
+    \path [line] (Ensembl) -- (ref);
+    \path [line] (Ensembl) -- node[align=center, text width=2.5cm, text=black!80, anchor=south] {{\txtsiza Ensembl}} (annot);    
+    \path [line] (ref) -- (cgi);    
+    \path [line] (cgi) -- (cgicov);
+    \path [line] (cov) -- (cgicov);    
+    \path [line] (cgicov) -- (cgicovgff);
+    \path [line] (annot) -- (cgicovgff);    
+    \path [line] (cgicovgff) -- (cand); 
+    
+\end{tikzpicture}
+\hspace*{0.5em}
+% ---------- ---------- ----------
+
+
+%%%%% ~~~~~ %%%%%
+\end{document}
+%%%%% ~~~~~ %%%%%
